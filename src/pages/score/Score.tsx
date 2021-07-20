@@ -197,6 +197,7 @@ const Score = (props: any) => {
           aria-label='页码'
           type='number'
           value={idInput}
+          min={0}
           onChange={(v) => setIdInput(Number(v.target.value))}
         />
         <p>/</p>
