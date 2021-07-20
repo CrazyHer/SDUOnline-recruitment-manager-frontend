@@ -16,6 +16,7 @@ const Score = (props: any) => {
     Models['POST/manager/interview/jump']['Res']['data']
   >();
   const [loading, setLoading] = useState<boolean>(false);
+  const [form] = useForm();
 
   useEffect(() => {
     if (user.token && id && depart) {
@@ -25,6 +26,10 @@ const Score = (props: any) => {
           if (res.success) {
             if (res.data) {
               setData(res.data);
+              form.setFieldsValue({
+                score: res.data.score,
+                comment: res.data.comment,
+              });
             } else {
               history.replace(`/score?id=${id + 1}`);
             }
@@ -44,7 +49,6 @@ const Score = (props: any) => {
 
   const [idInput, setIdInput] = useState(id);
   const history = useHistory();
-  const [form] = useForm();
 
   const [scoreLoading, setScoreLoading] = useState(false);
 
@@ -61,6 +65,7 @@ const Score = (props: any) => {
         message.success('打分完成');
         // 打分完成后跳转到下一位面试者
         setIdInput(id + 1);
+        form.resetFields();
         history.push(`/score?id=${id + 1}`);
       } else {
         message.error(`打分失败,${res.errorMsg}`);
@@ -85,6 +90,7 @@ const Score = (props: any) => {
         message.success('审核完成');
         // 审核完成后跳转到下一位面试者
         setIdInput(id + 1);
+        form.resetFields();
         history.push(`/score?id=${id + 1}`);
       } else {
         message.error(`审核失败,${res.errorMsg}`);
@@ -138,47 +144,52 @@ const Score = (props: any) => {
         </Spin>
       </div>
       <div className={Style.scoreForm}>
-        <Form form={form} onFinish={handleScore} labelCol={{ span: 3 }}>
-          <Form.Item
-            label='面试打分'
-            name='score'
-            wrapperCol={{ span: 4 }}
-            rules={[{ required: true, message: '请输入分数' }]}>
-            <Input type='number' />
-          </Form.Item>
-          <Form.Item label='备注' name='comment' wrapperCol={{ span: 16 }}>
-            <Input.TextArea autoSize={{ minRows: 8 }} />
-          </Form.Item>
+        <Spin spinning={loading}>
+          <Form form={form} onFinish={handleScore} labelCol={{ span: 3 }}>
+            <Form.Item
+              label='面试打分'
+              name='score'
+              wrapperCol={{ span: 4 }}
+              rules={[{ required: true, message: '请输入分数' }]}>
+              <Input type='number' />
+            </Form.Item>
+            <Form.Item label='备注' name='comment' wrapperCol={{ span: 16 }}>
+              <Input.TextArea autoSize={{ minRows: 8 }} />
+            </Form.Item>
 
-          {data?.score ? (
-            <Form.Item wrapperCol={{ offset: 0 }}>
-              <div className={Style.btnGroup}>
-                <Button onClick={() => history.push('/')}>返回</Button>
-                <Button htmlType='submit' type='primary' loading={scoreLoading}>
-                  提交
-                </Button>
-              </div>
-            </Form.Item>
-          ) : (
-            <Form.Item wrapperCol={{ offset: 0 }}>
-              <div className={Style.btnGroup}>
-                <Button onClick={() => history.push('/')}>返回</Button>
-                <Button
-                  type='default'
-                  loading={scoreLoading}
-                  onClick={() => handlePass(false)}>
-                  不通过
-                </Button>
-                <Button
-                  type='primary'
-                  loading={scoreLoading}
-                  onClick={() => handlePass(true)}>
-                  通过
-                </Button>
-              </div>
-            </Form.Item>
-          )}
-        </Form>
+            {!data?.score ? (
+              <Form.Item wrapperCol={{ offset: 0 }}>
+                <div className={Style.btnGroup}>
+                  <Button onClick={() => history.push('/')}>返回</Button>
+                  <Button
+                    htmlType='submit'
+                    type='primary'
+                    loading={scoreLoading}>
+                    提交
+                  </Button>
+                </div>
+              </Form.Item>
+            ) : (
+              <Form.Item wrapperCol={{ offset: 0 }}>
+                <div className={Style.btnGroup}>
+                  <Button onClick={() => history.push('/')}>返回</Button>
+                  <Button
+                    type='default'
+                    loading={scoreLoading}
+                    onClick={() => handlePass(false)}>
+                    不通过
+                  </Button>
+                  <Button
+                    type='primary'
+                    loading={scoreLoading}
+                    onClick={() => handlePass(true)}>
+                    通过
+                  </Button>
+                </div>
+              </Form.Item>
+            )}
+          </Form>
+        </Spin>
       </div>
       <div className={Style.indexBar}>
         <p>当前</p>
