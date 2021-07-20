@@ -11,6 +11,7 @@ import './App.css';
 const HLayout = lazy(() => import('./components/HLayout'));
 const Index = lazy(() => import('./pages/index/Index'));
 const Login = lazy(() => import('./pages/login/Login'));
+const Score = lazy(() => import('./pages/score/Score'));
 
 const LoadingPage = (
   <div
@@ -35,6 +36,7 @@ function App() {
             <Switch>
               <Route path='/' exact component={Index} />
               <Route path='/login' component={Login} />
+              <Route path='/score' component={Score} />
               <Redirect to='/' />
             </Switch>
           </Suspense>

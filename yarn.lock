@@ -2334,6 +2334,14 @@ adjust-sourcemap-loader@3.0.0:
     loader-utils "^2.0.0"
     regex-parser "^2.2.11"
 
+adler-32@~1.2.0:
+  version "1.2.0"
+  resolved "https://r.cnpmjs.org/adler-32/download/adler-32-1.2.0.tgz#6a3e6bf0a63900ba15652808cb15c6813d1a5f25"
+  integrity sha1-aj5r8KY5ALoVZSgIyxXGgT0aXyU=
+  dependencies:
+    exit-on-epipe "~1.0.1"
+    printj "~1.1.0"
+
 agent-base@6:
   version "6.0.2"
   resolved "https://r.cnpmjs.org/agent-base/download/agent-base-6.0.2.tgz#49fff58577cfee3f37176feab4c22e00f86d7f77"
@@ -3332,6 +3340,15 @@ case-sensitive-paths-webpack-plugin@2.3.0:
   resolved "https://r.cnpmjs.org/case-sensitive-paths-webpack-plugin/download/case-sensitive-paths-webpack-plugin-2.3.0.tgz#23ac613cc9a856e4f88ff8bb73bbb5e989825cf7"
   integrity sha1-I6xhPMmoVuT4j/i7c7u16YmCXPc=
 
+cfb@^1.1.4:
+  version "1.2.0"
+  resolved "https://r.cnpmjs.org/cfb/download/cfb-1.2.0.tgz#6a4d0872b525ed60349e1ef51fb4b0bf73eca9a8"
+  integrity sha1-ak0IcrUl7WA0nh71H7Swv3Psqag=
+  dependencies:
+    adler-32 "~1.2.0"
+    crc-32 "~1.2.0"
+    printj "~1.1.2"
+
 chalk@2.4.2, chalk@^2.0.0, chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"
   resolved "https://r.cnpmjs.org/chalk/download/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
@@ -3532,6 +3549,14 @@ coa@^2.0.2:
     chalk "^2.4.1"
     q "^1.1.2"
 
+codepage@~1.14.0:
+  version "1.14.0"
+  resolved "https://r.cnpmjs.org/codepage/download/codepage-1.14.0.tgz#8cbe25481323559d7d307571b0fff91e7a1d2f99"
+  integrity sha1-jL4lSBMjVZ19MHVxsP/5HnodL5k=
+  dependencies:
+    commander "~2.14.1"
+    exit-on-epipe "~1.0.1"
+
 collect-v8-coverage@^1.0.0:
   version "1.0.1"
   resolved "https://r.cnpmjs.org/collect-v8-coverage/download/collect-v8-coverage-1.0.1.tgz#cc2c8e94fc18bbdffe64d6534570c8a673b27f59"
@@ -3606,6 +3631,16 @@ commander@^4.0.1, commander@^4.1.1:
   version "4.1.1"
   resolved "https://r.cnpmjs.org/commander/download/commander-4.1.1.tgz#9fd602bd936294e9e9ef46a3f4d6964044b18068"
   integrity sha1-n9YCvZNilOnp70aj9NaWQESxgGg=
+
+commander@~2.14.1:
+  version "2.14.1"
+  resolved "https://r.cnpmjs.org/commander/download/commander-2.14.1.tgz#2235123e37af8ca3c65df45b026dbd357b01b9aa"
+  integrity sha1-IjUSPjevjKPGXfRbAm29NXsBuao=
+
+commander@~2.17.1:
+  version "2.17.1"
+  resolved "https://r.cnpmjs.org/commander/download/commander-2.17.1.tgz#bd77ab7de6de94205ceacc72f1716d29f20a77bf"
+  integrity sha1-vXerfebelCBc6sxy8XFtKfIKd78=
 
 common-tags@^1.8.0:
   version "1.8.0"
@@ -3813,6 +3848,14 @@ cosmiconfig@^7.0.0:
     parse-json "^5.0.0"
     path-type "^4.0.0"
     yaml "^1.10.0"
+
+crc-32@~1.2.0:
+  version "1.2.0"
+  resolved "https://r.cnpmjs.org/crc-32/download/crc-32-1.2.0.tgz#cb2db6e29b88508e32d9dd0ec1693e7b41a18208"
+  integrity sha1-yy224puIUI4y2d0OwWk+e0Ghggg=
+  dependencies:
+    exit-on-epipe "~1.0.1"
+    printj "~1.1.0"
 
 create-ecdh@^4.0.0:
   version "4.0.4"
@@ -5052,6 +5095,11 @@ execa@^4.0.0:
     signal-exit "^3.0.2"
     strip-final-newline "^2.0.0"
 
+exit-on-epipe@~1.0.1:
+  version "1.0.1"
+  resolved "https://r.cnpmjs.org/exit-on-epipe/download/exit-on-epipe-1.0.1.tgz#0bdd92e87d5285d267daa8171d0eb06159689692"
+  integrity sha1-C92S6H1ShdJn2qgXHQ6wYVlolpI=
+
 exit@^0.1.2:
   version "0.1.2"
   resolved "https://r.cnpmjs.org/exit/download/exit-0.1.2.tgz#0632638f8d877cc82107d30a0fff1a17cba1cd0c"
@@ -5209,6 +5257,11 @@ fb-watchman@^2.0.0:
   integrity sha1-/IT7OdJwnPP/bXQ3BhV7tXCKioU=
   dependencies:
     bser "2.1.1"
+
+fflate@^0.3.8:
+  version "0.3.11"
+  resolved "https://r.cnpmjs.org/fflate/download/fflate-0.3.11.tgz#2c440d7180fdeb819e64898d8858af327b042a5d"
+  integrity sha1-LEQNcYD964GeZImNiFivMnsEKl0=
 
 figgy-pudding@^3.5.1:
   version "3.5.2"
@@ -5391,6 +5444,11 @@ forwarded@0.2.0:
   version "0.2.0"
   resolved "https://r.cnpmjs.org/forwarded/download/forwarded-0.2.0.tgz#2269936428aad4c15c7ebe9779a84bf0b2a81811"
   integrity sha1-ImmTZCiq1MFcfr6XeahL8LKoGBE=
+
+frac@~1.1.2:
+  version "1.1.2"
+  resolved "https://r.cnpmjs.org/frac/download/frac-1.1.2.tgz#3d74f7f6478c88a1b5020306d747dc6313c74d0b"
+  integrity sha1-PXT39keMiKG1AgMG10fcYxPHTQs=
 
 fragment-cache@^0.2.1:
   version "0.2.1"
@@ -9241,6 +9299,11 @@ pretty-format@^26.0.0, pretty-format@^26.6.0, pretty-format@^26.6.2:
     ansi-styles "^4.0.0"
     react-is "^17.0.1"
 
+printj@~1.1.0, printj@~1.1.2:
+  version "1.1.2"
+  resolved "https://r.cnpmjs.org/printj/download/printj-1.1.2.tgz#d90deb2975a8b9f600fb3a1c94e3f4c53c78a222"
+  integrity sha1-2Q3rKXWoufYA+zoclOP0xTx4oiI=
+
 process-nextick-args@~2.0.0:
   version "2.0.1"
   resolved "https://r.cnpmjs.org/process-nextick-args/download/process-nextick-args-2.0.1.tgz#7820d9b16120cc55ca9ae7792680ae7dba6d7fe2"
@@ -10913,6 +10976,13 @@ sprintf-js@~1.0.2:
   resolved "https://r.cnpmjs.org/sprintf-js/download/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
+ssf@~0.11.2:
+  version "0.11.2"
+  resolved "https://r.cnpmjs.org/ssf/download/ssf-0.11.2.tgz#0b99698b237548d088fc43cdf2b70c1a7512c06c"
+  integrity sha1-C5lpiyN1SNCI/EPN8rcMGnUSwGw=
+  dependencies:
+    frac "~1.1.2"
+
 ssri@^6.0.1:
   version "6.0.2"
   resolved "https://r.cnpmjs.org/ssri/download/ssri-6.0.2.tgz#157939134f20464e7301ddba3e90ffa8f7728ac5"
@@ -12102,10 +12172,20 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
+wmf@~1.0.1:
+  version "1.0.2"
+  resolved "https://r.cnpmjs.org/wmf/download/wmf-1.0.2.tgz#7d19d621071a08c2bdc6b7e688a9c435298cc2da"
+  integrity sha1-fRnWIQcaCMK9xrfmiKnENSmMwto=
+
 word-wrap@^1.2.3, word-wrap@~1.2.3:
   version "1.2.3"
   resolved "https://r.cnpmjs.org/word-wrap/download/word-wrap-1.2.3.tgz#610636f6b1f703891bd34771ccb17fb93b47079c"
   integrity sha1-YQY29rH3A4kb00dxzLF/uTtHB5w=
+
+word@~0.3.0:
+  version "0.3.0"
+  resolved "https://r.cnpmjs.org/word/download/word-0.3.0.tgz#8542157e4f8e849f4a363a288992d47612db9961"
+  integrity sha1-hUIVfk+OhJ9KNjooiZLUdhLbmWE=
 
 workbox-background-sync@^5.1.4:
   version "5.1.4"
@@ -12318,6 +12398,22 @@ ws@^7.4.5:
   version "7.5.3"
   resolved "https://r.cnpmjs.org/ws/download/ws-7.5.3.tgz#160835b63c7d97bfab418fc1b8a9fced2ac01a74"
   integrity sha1-Fgg1tjx9l7+rQY/BuKn87SrAGnQ=
+
+xlsx@^0.17.0:
+  version "0.17.0"
+  resolved "https://r.cnpmjs.org/xlsx/download/xlsx-0.17.0.tgz#028176a0140967dcee1817d221678461e47481c8"
+  integrity sha1-AoF2oBQJZ9zuGBfSIWeEYeR0gcg=
+  dependencies:
+    adler-32 "~1.2.0"
+    cfb "^1.1.4"
+    codepage "~1.14.0"
+    commander "~2.17.1"
+    crc-32 "~1.2.0"
+    exit-on-epipe "~1.0.1"
+    fflate "^0.3.8"
+    ssf "~0.11.2"
+    wmf "~1.0.1"
+    word "~0.3.0"
 
 xml-name-validator@^3.0.0:
   version "3.0.0"

@@ -1,4 +1,4 @@
-/* md5: 504726c4c8dddf1fb054d46148cb12e3 */
+/* md5: a16bc4237b3ca6e12fb6ed20febc9377 */
 /* Rap仓库id: 286854 */
 /* Rapper版本: 1.2.2 */
 /* eslint-disable */
@@ -33,18 +33,6 @@ export interface IModels {
          * manager管理员，user普通用户
          */
         role: string
-        /**
-         * 管理员所在部门
-         */
-        depart: string
-        /**
-         * 管理员所在事业群
-         */
-        group: string
-        /**
-         * 管理员所在校区
-         */
-        area: string
       }
       errorCode: string
       errorMsg: string
@@ -56,37 +44,19 @@ export interface IModels {
    * Rap 地址: http://rap2.taobao.org/repository/editor?id=286854&mod=466154&itf=2019597
    */
   'POST/manager/info': {
-    Req: {
-      /**
-       * 令牌
-       */
-      token: string
-    }
+    Req: {}
     Res: {
-      /**
-       * 姓名
-       */
-      name: string
-      /**
-       * 校区
-       */
-      area: string
-      /**
-       * 专业
-       */
-      major: string
-      /**
-       * 学院
-       */
-      college: string
-      /**
-       * 事业群
-       */
-      group: string
-      /**
-       * 部门
-       */
-      depart: string
+      errorMsg: string
+      errorCode: string
+      data: {
+        name: string
+        area: string
+        major: string
+        college: string
+        group: string
+        depart: string[]
+      }
+      success: boolean
     }
   }
 
@@ -97,9 +67,9 @@ export interface IModels {
   'POST/manager/interview/list': {
     Req: {
       /**
-       * 令牌
+       * 管理员要查看的部门
        */
-      token: string
+      depart: string
     }
     Res: {
       success: boolean
@@ -110,7 +80,7 @@ export interface IModels {
           /**
            * 面试者在本部门的排号
            */
-          id: string
+          id: number
           /**
            * 姓名
            */
@@ -146,7 +116,7 @@ export interface IModels {
   }
 
   /**
-   * 接口名：面试者详细信息
+   * 接口名：面试者详细信息(可以不做，前端用不到)
    * Rap 地址: http://rap2.taobao.org/repository/editor?id=286854&mod=466154&itf=2018551
    */
   'POST/manager/interview/interview': {
@@ -155,10 +125,6 @@ export interface IModels {
        * 面试者账号（学号）
        */
       username: string
-      /**
-       * 令牌
-       */
-      token: string
     }
     Res: {
       success: boolean
@@ -216,7 +182,9 @@ export interface IModels {
           /**
            * 这个问题的选项（如果这是个选择题遍历数组获取每个选项，而主观题此处为空）
            */
-          question_option: any[]
+          question_option: {
+            option: string
+          }[]
           /**
            * 问题种类，multiple为多选，subjective为主观
            */
@@ -237,17 +205,21 @@ export interface IModels {
   'POST/manager/interview/score': {
     Req: {
       /**
-       * 令牌
+       * 面试者的序号
        */
-      token: string
-      /**
-       * 面试者的账号（学号）
-       */
-      username: string
+      id: number
       /**
        * 他的分数
        */
       score: string
+      /**
+       * 备注
+       */
+      comment: string
+      /**
+       * 面试的部门
+       */
+      depart: string
     }
     Res: {
       success: boolean
@@ -264,13 +236,13 @@ export interface IModels {
   'POST/manager/interview/jump': {
     Req: {
       /**
-       * 令牌
-       */
-      token: string
-      /**
        * 面试者排号
        */
-      id: string
+      id: number
+      /**
+       * 当前部门
+       */
+      depart: string
     }
     Res: {
       success: boolean
@@ -287,12 +259,26 @@ export interface IModels {
         phone: string
         qq: string
         questionnaire: {
-          question_id: string
+          question_id: number
           question_name: string
-          question_option: any[]
+          question_option: {
+            option: string
+          }[]
           question_type: string
           question_answer: string
         }[]
+        /**
+         * 面试者账号
+         */
+        username: string
+        /**
+         * 评分，如果未评价则为null
+         */
+        score: number
+        /**
+         * 备注，同上
+         */
+        comment: string
       }
     }
   }
@@ -304,17 +290,17 @@ export interface IModels {
   'POST/manager/interview/pass': {
     Req: {
       /**
-       * 令牌
+       * 面试者排号
        */
-      token: string
-      /**
-       * 面试者账号（学号）
-       */
-      username: string
+      id: number
       /**
        * 是否通过，通过为1，不通过为0
        */
       pass: string
+      /**
+       * 所在部门
+       */
+      depart: string
     }
     Res: {
       success: boolean
@@ -390,7 +376,7 @@ export function createFetch(fetchConfig: commonLib.RequesterOption, extraConfig?
     },
 
     /**
-     * 接口名：面试者详细信息
+     * 接口名：面试者详细信息(可以不做，前端用不到)
      * Rap 地址: http://rap2.taobao.org/repository/editor?id=286854&mod=466154&itf=2018551
      * @param req 请求参数
      * @param extra 请求配置项
