@@ -33,6 +33,7 @@ const Login = (props: any) => {
         user.setLoginInfo(data.username, role);
       } else {
         message.warn(`登陆失败,${res.errorMsg}`);
+        console.log(res);
       }
     } catch (error) {
       message.error(`登陆失败，请求异常`);

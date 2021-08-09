@@ -27,6 +27,7 @@ const HLayout = (props: any) => {
 
   useEffect(() => {
     if (user.token !== '') {
+      user.setLoginLoading(true);
       fetch['POST/manager/info']()
         .then((res) => {
           if (res.success) {
@@ -42,7 +43,8 @@ const HLayout = (props: any) => {
           message.error('用户信息获取失败');
           console.error(err);
           handleLogoff();
-        });
+        })
+        .finally(() => user.setLoginLoading(false));
     }
   }, [user.token]);
 
@@ -79,7 +81,9 @@ const HLayout = (props: any) => {
               </h1>
             </div>
 
-            {user.name && state.depart ? (
+            {user.loginLoading ? (
+              <Spin spinning={true} />
+            ) : (
               <div className={Style.userinfo}>
                 <p>{user.group}</p>
 
@@ -100,8 +104,6 @@ const HLayout = (props: any) => {
                   退出
                 </Button>
               </div>
-            ) : (
-              <Spin spinning={true} />
             )}
           </div>
         </Header>

@@ -11,6 +11,7 @@ export default class User {
   name: string;
   major: string;
   college: string;
+  loginLoading: boolean;
   constructor() {
     makeAutoObservable(this);
 
@@ -23,6 +24,7 @@ export default class User {
     this.name = '';
     this.major = '';
     this.college = '';
+    this.loginLoading = false;
     customFetch(this.token);
   }
 
@@ -52,5 +54,9 @@ export default class User {
     this.college = college;
     this.group = group;
     this.depart = depart;
+  };
+
+  @action setLoginLoading = (loading: boolean) => {
+    this.loginLoading = loading;
   };
 }

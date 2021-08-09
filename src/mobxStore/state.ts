@@ -11,7 +11,7 @@ export default class State {
     phone: string;
     qq: string;
     score: string;
-    status: string;
+    status: number;
     first: string;
     key: number;
   }[];

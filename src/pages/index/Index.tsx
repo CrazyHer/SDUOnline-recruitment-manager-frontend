@@ -36,21 +36,21 @@ const Index = (props: any) => {
       //面试状态，1 (未面试，初始值，即报名完成后就是1)>2(已面试，即打完分后变成2)>3或4(3为不通过，4为通过
       render: (value, record, index) => (
         <>
-          {value === '2'
+          {value === 2
             ? '已面试'
             : value === 3
             ? '不通过'
-            : value === '4'
+            : value === 4
             ? '通过'
             : '未面试'}
         </>
       ),
       // 筛选面试状态
       filters: [
-        { text: '未面试', value: '1' },
-        { text: '已面试', value: '2' },
-        { text: '不通过', value: '3' },
-        { text: '通过', value: '4' },
+        { text: '未面试', value: 1 },
+        { text: '已面试', value: 2 },
+        { text: '不通过', value: 3 },
+        { text: '通过', value: 4 },
       ],
       onFilter: (value, record: any) => value === record.status,
       filterMultiple: true,
@@ -74,7 +74,7 @@ const Index = (props: any) => {
   const [listLoading, setListLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (user.token) {
+    if (user.token && state.depart) {
       setListLoading(true);
       fetch['POST/manager/interview/list']({ depart: state.depart })
         .then((res) => {
@@ -125,11 +125,11 @@ const Index = (props: any) => {
             row.phone,
             row.qq,
             row.score,
-            row.status === '2'
+            row.status === 2
               ? '已面试'
-              : row.status === '3'
+              : row.status === 3
               ? '不通过'
-              : row.status === '4'
+              : row.status === 4
               ? '通过'
               : '未面试',
           ]);
@@ -152,7 +152,7 @@ const Index = (props: any) => {
     <div className={Style.content}>
       <div className={Style.btn}>
         <Button
-          loading={listLoading || exportLoading}
+          loading={listLoading || user.loginLoading || exportLoading}
           type='link'
           onClick={handleExport}>
           导出全部人员信息
@@ -160,7 +160,7 @@ const Index = (props: any) => {
       </div>
       <Table
         bordered
-        loading={listLoading}
+        loading={listLoading || user.loginLoading}
         columns={columns}
         dataSource={state.candidateList}
         pagination={paginationConfig}

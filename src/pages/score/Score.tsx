@@ -24,7 +24,10 @@ const Score = (props: any) => {
     // 同步跳转输入框里的id值
     setIdInput(id);
     // 防止越界访问id
-    if (id > candidateList[candidateList.length - 1].id) {
+    if (
+      !candidateList[candidateList.length - 1] ||
+      id > candidateList[candidateList.length - 1].id
+    ) {
       history.push('/');
       return;
     }
@@ -33,7 +36,7 @@ const Score = (props: any) => {
       history.replace(`/score?id=${id + 1}`);
       return;
     }
-    if (user.token && id && depart && first) {
+    if (user.token && typeof id === 'number' && depart && first) {
       setLoading(true);
       fetch['POST/manager/interview/jump']({
         id,
@@ -175,7 +178,7 @@ const Score = (props: any) => {
             <Form.Item label='备注' name='comment' wrapperCol={{ span: 16 }}>
               <Input.TextArea autoSize={{ minRows: 8 }} />
             </Form.Item>
-            {candidateList.find((v) => v.id === id)?.status === '1' ? (
+            {candidateList.find((v) => v.id === id)?.status === 1 ? (
               <Form.Item wrapperCol={{ offset: 0 }}>
                 <div className={Style.btnGroup}>
                   <Button onClick={() => history.push('/')}>返回</Button>
@@ -187,7 +190,7 @@ const Score = (props: any) => {
                   </Button>
                 </div>
               </Form.Item>
-            ) : candidateList.find((v) => v.id === id)?.status === '2' ? (
+            ) : candidateList.find((v) => v.id === id)?.status === 2 ? (
               <Form.Item wrapperCol={{ offset: 0 }}>
                 <div className={Style.btnGroup}>
                   <Button onClick={() => history.push('/')}>返回</Button>
@@ -206,7 +209,11 @@ const Score = (props: any) => {
                 </div>
               </Form.Item>
             ) : (
-              <Button onClick={() => history.push('/')}>返回</Button>
+              <Form.Item wrapperCol={{ offset: 0 }}>
+                <div className={Style.btnGroup}>
+                  <Button onClick={() => history.push('/')}>返回</Button>
+                </div>
+              </Form.Item>
             )}
           </Form>
         </Spin>
@@ -221,7 +228,7 @@ const Score = (props: any) => {
           onChange={(v) => setIdInput(Number(v.target.value))}
         />
         <p>/</p>
-        <p>{candidateList[candidateList.length - 1].id}</p>
+        <p>{candidateList[candidateList.length - 1]?.id}</p>
         <Button
           type='link'
           onClick={() => {
@@ -231,7 +238,7 @@ const Score = (props: any) => {
           }}
           disabled={
             idInput === id ||
-            idInput > candidateList[candidateList.length - 1].id
+            idInput > candidateList[candidateList.length - 1]?.id
           }>
           转到
         </Button>

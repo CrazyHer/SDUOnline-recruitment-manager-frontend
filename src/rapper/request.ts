@@ -1,4 +1,4 @@
-/* md5: 15ab7973e584dc2efd571ebb1edd594d */
+/* md5: d8647471bf132ba4fb6f383a55460d48 */
 /* Rap仓库id: 286854 */
 /* Rapper版本: 1.2.2 */
 /* eslint-disable */
@@ -66,9 +66,6 @@ export interface IModels {
    */
   'POST/manager/interview/list': {
     Req: {
-      /**
-       * 管理员要查看的部门
-       */
       depart: string
     }
     Res: {
@@ -109,7 +106,7 @@ export interface IModels {
            * 面试状态，1 (未面试，初始值，即报名完成后就是1)>2(已面试，即打完分后变成2)>3或4(3为不通过，4为通过，由pass接口触发)
            *
            */
-          status: string
+          status: number
           /**
            * 1为第一志愿，2为第二志愿
            */
@@ -125,25 +122,10 @@ export interface IModels {
    */
   'POST/manager/interview/score': {
     Req: {
-      /**
-       * 面试者的序号
-       */
       id: number
-      /**
-       * 他的分数
-       */
-      score: string
-      /**
-       * 备注
-       */
-      comment: string
-      /**
-       * 面试的部门
-       */
       depart: string
-      /**
-       * 1为第一志愿，2为第二志愿
-       */
+      score: string
+      comment: string
       first: string
     }
     Res: {
@@ -160,9 +142,6 @@ export interface IModels {
    */
   'POST/manager/interview/interview': {
     Req: {
-      /**
-       * 面试者账号（学号）
-       */
       username: string
     }
     Res: {
@@ -243,17 +222,8 @@ export interface IModels {
    */
   'POST/manager/interview/jump': {
     Req: {
-      /**
-       * 面试者排号
-       */
       id: number
-      /**
-       * 当前部门
-       */
       depart: string
-      /**
-       * 1为第一志愿，2为第二志愿
-       */
       first: string
     }
     Res: {
@@ -299,21 +269,9 @@ export interface IModels {
    */
   'POST/manager/interview/pass': {
     Req: {
-      /**
-       * 面试者排号
-       */
       id: number
-      /**
-       * 是否通过，通过为1，不通过为0
-       */
-      pass: string
-      /**
-       * 所在部门
-       */
       depart: string
-      /**
-       * 1为第一志愿，2为第二志愿
-       */
+      pass: string
       first: string
     }
     Res: {
