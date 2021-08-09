@@ -41,6 +41,7 @@ const HLayout = (props: any) => {
         .catch((err) => {
           message.error('用户信息获取失败');
           console.error(err);
+          handleLogoff();
         });
     }
   }, [user.token]);
@@ -82,7 +83,10 @@ const HLayout = (props: any) => {
               <div className={Style.userinfo}>
                 <p>{user.group}</p>
 
-                <Select defaultValue={state.depart} onChange={handleChange}>
+                <Select
+                  disabled={pathname !== '/'}
+                  defaultValue={state.depart}
+                  onChange={handleChange}>
                   {availableDeparts.map((v, i) => (
                     <Select.Option key={i} value={v}>
                       {v}

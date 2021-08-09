@@ -13,7 +13,7 @@ import Style from './Index.module.css';
 const Index = (props: any) => {
   const user = props.user as User;
   const history = useHistory();
-  const { depart } = props.state as State;
+  const state = props.state as State;
   // 表格列名定义
   const columns: ColumnsType<{}> = [
     { title: '序号', dataIndex: 'id', key: 'id', align: 'center' },
@@ -59,7 +59,7 @@ const Index = (props: any) => {
       title: '操作',
       key: 'action',
       align: 'center',
-      render: (e: typeof data[0]) => (
+      render: (e: typeof state.candidateList[0]) => (
         <Button
           type='link'
           onClick={() => {
@@ -71,29 +71,15 @@ const Index = (props: any) => {
     },
   ];
 
-  const [data, setData] = useState<
-    {
-      id: Number;
-      name: string;
-      username: string;
-      college: string;
-      phone: string;
-      qq: string;
-      score: string;
-      status: string;
-      key: Number;
-    }[]
-  >([]);
-
   const [listLoading, setListLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (user.token) {
       setListLoading(true);
-      fetch['POST/manager/interview/list']({ depart })
+      fetch['POST/manager/interview/list']({ depart: state.depart })
         .then((res) => {
           if (res.success) {
-            setData(res.data.list.map((v) => ({ ...v, key: v.id })));
+            state.setCandidateList(res.data.list);
           } else {
             message.error(`拉取名单失败，${res.errorMsg}`);
           }
@@ -105,7 +91,7 @@ const Index = (props: any) => {
         })
         .finally(() => setListLoading(false));
     }
-  }, [depart]);
+  }, [state.depart]);
 
   // 表格分页设置
   const paginationConfig: TablePaginationConfig = {
@@ -130,8 +116,8 @@ const Index = (props: any) => {
           '面试成绩',
           '当前状态',
         ]);
-        for (let i = 0; i < data.length; i++) {
-          let row = data[i];
+        for (let i = 0; i < state.candidateList.length; i++) {
+          let row = state.candidateList[i];
           wsData.push([
             row.id,
             row.name,
@@ -151,7 +137,7 @@ const Index = (props: any) => {
         const wb = XLSX.utils.book_new();
         let ws = XLSX.utils.aoa_to_sheet(wsData);
         XLSX.utils.book_append_sheet(wb, ws);
-        XLSX.writeFile(wb, `${user.group}${depart}面试名单.xlsx`);
+        XLSX.writeFile(wb, `${user.group}${state.depart}面试名单.xlsx`);
         resolve();
       });
     } catch (error) {
@@ -176,7 +162,7 @@ const Index = (props: any) => {
         bordered
         loading={listLoading}
         columns={columns}
-        dataSource={data}
+        dataSource={state.candidateList}
         pagination={paginationConfig}
       />
     </div>

@@ -11,28 +11,42 @@ import Style from './Score.module.css';
 const Score = (props: any) => {
   const id = Number(new URLSearchParams(useLocation().search).get('id'));
   const user = props.user as User;
-  const { depart } = props.state as State;
+  const { depart, candidateList } = props.state as State;
   const [data, setData] = useState<
     Models['POST/manager/interview/jump']['Res']['data']
   >();
   const [loading, setLoading] = useState<boolean>(false);
   const [form] = useForm();
+  // 确定该用户是第一志愿还是第二志愿
+  const first = candidateList.find((v) => v.id === id)?.first;
 
   useEffect(() => {
-    if (user.token && id && depart) {
+    // 同步跳转输入框里的id值
+    setIdInput(id);
+    // 防止越界访问id
+    if (id > candidateList[candidateList.length - 1].id) {
+      history.push('/');
+      return;
+    }
+    // 跳过不存在的id
+    if (!first) {
+      history.replace(`/score?id=${id + 1}`);
+      return;
+    }
+    if (user.token && id && depart && first) {
       setLoading(true);
-      fetch['POST/manager/interview/jump']({ id, depart })
+      fetch['POST/manager/interview/jump']({
+        id,
+        depart,
+        first,
+      })
         .then((res) => {
           if (res.success) {
-            if (res.data) {
-              setData(res.data);
-              form.setFieldsValue({
-                score: res.data.score,
-                comment: res.data.comment,
-              });
-            } else {
-              history.replace(`/score?id=${id + 1}`);
-            }
+            setData(res.data);
+            form.setFieldsValue({
+              score: res.data.score,
+              comment: res.data.comment,
+            });
           } else {
             message.error(`获取面试者信息失败，${res.errorMsg}`);
           }
@@ -60,13 +74,15 @@ const Score = (props: any) => {
         depart,
         score: e.score,
         comment: e.comment,
+        first: first as string,
       });
       if (res.success) {
         message.success('打分完成');
-        // 打分完成后跳转到下一位面试者
-        setIdInput(id + 1);
+        // 打分完成后跳转到下一位面试者,若没有下一位面试者，则返回
         form.resetFields();
-        history.push(`/score?id=${id + 1}`);
+        if (id < candidateList[candidateList.length - 1].id) {
+          history.push(`/score?id=${id + 1}`);
+        } else history.push('/');
       } else {
         message.error(`打分失败,${res.errorMsg}`);
       }
@@ -85,13 +101,15 @@ const Score = (props: any) => {
         id,
         depart,
         pass: isPass ? '1' : '0',
+        first: first as string,
       });
       if (res.success) {
         message.success('审核完成');
-        // 审核完成后跳转到下一位面试者
-        setIdInput(id + 1);
+        // 审核完成后跳转到下一位面试者，若没有下一位面试者，则返回
         form.resetFields();
-        history.push(`/score?id=${id + 1}`);
+        if (id < candidateList[candidateList.length - 1].id) {
+          history.push(`/score?id=${id + 1}`);
+        } else history.push('/');
       } else {
         message.error(`审核失败,${res.errorMsg}`);
       }
@@ -112,9 +130,10 @@ const Score = (props: any) => {
             <Descriptions.Item label='学院'>{data?.college}</Descriptions.Item>
             <Descriptions.Item label='电话号'>{data?.phone}</Descriptions.Item>
             <Descriptions.Item label='QQ号'>{data?.qq}</Descriptions.Item>
-            <Descriptions.Item label='志向1'>{data?.depart1}</Descriptions.Item>
-            <Descriptions.Item label='志向2'>{data?.depart2}</Descriptions.Item>
-            <Descriptions.Item label='个人简介' span={2}>
+            <Descriptions.Item label={`第${first === '1' ? '一' : '二'}志愿`}>
+              {data?.depart}
+            </Descriptions.Item>
+            <Descriptions.Item label='个人简介'>
               <div
                 dangerouslySetInnerHTML={{ __html: data?.introduce || '' }}
               />
@@ -156,8 +175,7 @@ const Score = (props: any) => {
             <Form.Item label='备注' name='comment' wrapperCol={{ span: 16 }}>
               <Input.TextArea autoSize={{ minRows: 8 }} />
             </Form.Item>
-
-            {!data?.score ? (
+            {candidateList.find((v) => v.id === id)?.status === '1' ? (
               <Form.Item wrapperCol={{ offset: 0 }}>
                 <div className={Style.btnGroup}>
                   <Button onClick={() => history.push('/')}>返回</Button>
@@ -169,7 +187,7 @@ const Score = (props: any) => {
                   </Button>
                 </div>
               </Form.Item>
-            ) : (
+            ) : candidateList.find((v) => v.id === id)?.status === '2' ? (
               <Form.Item wrapperCol={{ offset: 0 }}>
                 <div className={Style.btnGroup}>
                   <Button onClick={() => history.push('/')}>返回</Button>
@@ -187,6 +205,8 @@ const Score = (props: any) => {
                   </Button>
                 </div>
               </Form.Item>
+            ) : (
+              <Button onClick={() => history.push('/')}>返回</Button>
             )}
           </Form>
         </Spin>
@@ -201,7 +221,7 @@ const Score = (props: any) => {
           onChange={(v) => setIdInput(Number(v.target.value))}
         />
         <p>/</p>
-        <p>100</p>
+        <p>{candidateList[candidateList.length - 1].id}</p>
         <Button
           type='link'
           onClick={() => {
@@ -209,7 +229,10 @@ const Score = (props: any) => {
             form.resetFields();
             history.push(`/score?id=${idInput}`);
           }}
-          disabled={idInput === id}>
+          disabled={
+            idInput === id ||
+            idInput > candidateList[candidateList.length - 1].id
+          }>
           转到
         </Button>
       </div>

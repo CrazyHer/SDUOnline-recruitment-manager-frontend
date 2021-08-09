@@ -1,4 +1,4 @@
-/* md5: a16bc4237b3ca6e12fb6ed20febc9377 */
+/* md5: 15ab7973e584dc2efd571ebb1edd594d */
 /* Rap仓库id: 286854 */
 /* Rapper版本: 1.2.2 */
 /* eslint-disable */
@@ -110,8 +110,47 @@ export interface IModels {
            *
            */
           status: string
+          /**
+           * 1为第一志愿，2为第二志愿
+           */
+          first: string
         }[]
       }
+    }
+  }
+
+  /**
+   * 接口名：打分
+   * Rap 地址: http://rap2.taobao.org/repository/editor?id=286854&mod=466154&itf=2018552
+   */
+  'POST/manager/interview/score': {
+    Req: {
+      /**
+       * 面试者的序号
+       */
+      id: number
+      /**
+       * 他的分数
+       */
+      score: string
+      /**
+       * 备注
+       */
+      comment: string
+      /**
+       * 面试的部门
+       */
+      depart: string
+      /**
+       * 1为第一志愿，2为第二志愿
+       */
+      first: string
+    }
+    Res: {
+      success: boolean
+      errorCode: number
+      errorMsg: string
+      data: {}
     }
   }
 
@@ -199,37 +238,6 @@ export interface IModels {
   }
 
   /**
-   * 接口名：打分
-   * Rap 地址: http://rap2.taobao.org/repository/editor?id=286854&mod=466154&itf=2018552
-   */
-  'POST/manager/interview/score': {
-    Req: {
-      /**
-       * 面试者的序号
-       */
-      id: number
-      /**
-       * 他的分数
-       */
-      score: string
-      /**
-       * 备注
-       */
-      comment: string
-      /**
-       * 面试的部门
-       */
-      depart: string
-    }
-    Res: {
-      success: boolean
-      errorCode: number
-      errorMsg: string
-      data: {}
-    }
-  }
-
-  /**
    * 接口名：跳转到某个面试者
    * Rap 地址: http://rap2.taobao.org/repository/editor?id=286854&mod=466154&itf=2018553
    */
@@ -243,6 +251,10 @@ export interface IModels {
        * 当前部门
        */
       depart: string
+      /**
+       * 1为第一志愿，2为第二志愿
+       */
+      first: string
     }
     Res: {
       success: boolean
@@ -251,10 +263,6 @@ export interface IModels {
       data: {
         name: string
         college: string
-        group1: string
-        depart1: string
-        group2: string
-        depart2: string
         introduce: string
         phone: string
         qq: string
@@ -279,6 +287,8 @@ export interface IModels {
          * 备注，同上
          */
         comment: string
+        depart: string
+        group: string
       }
     }
   }
@@ -301,6 +311,10 @@ export interface IModels {
        * 所在部门
        */
       depart: string
+      /**
+       * 1为第一志愿，2为第二志愿
+       */
+      first: string
     }
     Res: {
       success: boolean
@@ -317,8 +331,8 @@ export interface IResponseTypes {
   'POST/login': ResSelector<IModels['POST/login']['Res']>
   'POST/manager/info': ResSelector<IModels['POST/manager/info']['Res']>
   'POST/manager/interview/list': ResSelector<IModels['POST/manager/interview/list']['Res']>
-  'POST/manager/interview/interview': ResSelector<IModels['POST/manager/interview/interview']['Res']>
   'POST/manager/interview/score': ResSelector<IModels['POST/manager/interview/score']['Res']>
+  'POST/manager/interview/interview': ResSelector<IModels['POST/manager/interview/interview']['Res']>
   'POST/manager/interview/jump': ResSelector<IModels['POST/manager/interview/jump']['Res']>
   'POST/manager/interview/pass': ResSelector<IModels['POST/manager/interview/pass']['Res']>
 }
@@ -376,24 +390,6 @@ export function createFetch(fetchConfig: commonLib.RequesterOption, extraConfig?
     },
 
     /**
-     * 接口名：面试者详细信息(可以不做，前端用不到)
-     * Rap 地址: http://rap2.taobao.org/repository/editor?id=286854&mod=466154&itf=2018551
-     * @param req 请求参数
-     * @param extra 请求配置项
-     */
-    'POST/manager/interview/interview': (
-      req?: IModels['POST/manager/interview/interview']['Req'],
-      extra?: commonLib.IExtra
-    ) => {
-      return rapperFetch({
-        url: '/manager/interview/interview',
-        method: 'POST',
-        params: req,
-        extra,
-      }) as Promise<IResponseTypes['POST/manager/interview/interview']>
-    },
-
-    /**
      * 接口名：打分
      * Rap 地址: http://rap2.taobao.org/repository/editor?id=286854&mod=466154&itf=2018552
      * @param req 请求参数
@@ -409,6 +405,24 @@ export function createFetch(fetchConfig: commonLib.RequesterOption, extraConfig?
         params: req,
         extra,
       }) as Promise<IResponseTypes['POST/manager/interview/score']>
+    },
+
+    /**
+     * 接口名：面试者详细信息(可以不做，前端用不到)
+     * Rap 地址: http://rap2.taobao.org/repository/editor?id=286854&mod=466154&itf=2018551
+     * @param req 请求参数
+     * @param extra 请求配置项
+     */
+    'POST/manager/interview/interview': (
+      req?: IModels['POST/manager/interview/interview']['Req'],
+      extra?: commonLib.IExtra
+    ) => {
+      return rapperFetch({
+        url: '/manager/interview/interview',
+        method: 'POST',
+        params: req,
+        extra,
+      }) as Promise<IResponseTypes['POST/manager/interview/interview']>
     },
 
     /**
