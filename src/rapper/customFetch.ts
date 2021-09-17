@@ -11,7 +11,7 @@ const customFetch = (token: string) => {
             method,
             url,
             data: params,
-            baseURL: 'http://8.131.52.114:7001',
+            baseURL: 'https://gengzhaosui.top:7001',
           };
           const response = await axios(
             // 登录接口请求头不附带token

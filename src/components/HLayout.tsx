@@ -68,6 +68,7 @@ const HLayout = (props: any) => {
         <Header
           style={{
             backgroundColor: 'white',
+            backdropFilter: 'blur(2px)',
             borderBottom: 'solid 1px #dbdbdb',
             boxShadow: '0 2.5px 0 #f4f5f7',
             marginBottom: '33.25px',

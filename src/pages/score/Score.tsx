@@ -2,6 +2,7 @@
 import { Button, Descriptions, Form, Input, message, Spin } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import { inject, observer } from 'mobx-react';
+import { stringify } from 'querystring';
 import { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import State from '../../mobxStore/state';
@@ -10,6 +11,7 @@ import { fetch, Models } from '../../rapper';
 import Style from './Score.module.css';
 const Score = (props: any) => {
   const id = Number(new URLSearchParams(useLocation().search).get('id'));
+  const first = new URLSearchParams(useLocation().search).get('first');
   const user = props.user as User;
   const { depart, candidateList } = props.state as State;
   const [data, setData] = useState<
@@ -18,13 +20,22 @@ const Score = (props: any) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [form] = useForm();
   // 确定该用户是第一志愿还是第二志愿
-  const first = candidateList.find((v) => v.id === id)?.first;
 
   useEffect(() => {
-    // 同步跳转输入框里的id值
-    setIdInput(id);
-    // 防止越界访问id
+    // 校验参数合法性
     if (
+      !user.token ||
+      !id ||
+      !depart ||
+      (first !== '0' && first !== '1') ||
+      !candidateList[0]
+    ) {
+      history.replace('/');
+      return;
+    }
+    // 防止越界或非法访问id
+    if (
+      id < 0 ||
       !candidateList[candidateList.length - 1] ||
       id > candidateList[candidateList.length - 1].id
     ) {
@@ -36,38 +47,48 @@ const Score = (props: any) => {
       history.replace(`/score?id=${id + 1}`);
       return;
     }
-    if (user.token && typeof id === 'number' && depart && first) {
-      setLoading(true);
-      fetch['POST/manager/interview/jump']({
-        id,
-        depart,
-        first,
+
+    // 同步跳转输入框里的id值
+    setIdInput(id);
+    // 获取面试者信息
+    setLoading(true);
+    fetch['POST/manager/interview/jump']({
+      id,
+      depart,
+      first,
+    })
+      .then((res) => {
+        if (res.success) {
+          setData(res.data);
+          form.setFieldsValue({
+            score: res.data.score,
+            comment: res.data.comment,
+          });
+        } else {
+          message.error(`获取面试者信息失败，${res.errorMsg}`);
+        }
       })
-        .then((res) => {
-          if (res.success) {
-            setData(res.data);
-            form.setFieldsValue({
-              score: res.data.score,
-              comment: res.data.comment,
-            });
-          } else {
-            message.error(`获取面试者信息失败，${res.errorMsg}`);
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-          message.error('获取面试者信息失败，请求异常');
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
-  }, [id, depart]);
+      .catch((err) => {
+        console.error(err);
+        message.error('获取面试者信息失败，请求异常');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [id, depart, first]);
 
   const [idInput, setIdInput] = useState(id);
   const history = useHistory();
 
   const [scoreLoading, setScoreLoading] = useState(false);
+
+  const goToNext = () => {
+    const params = stringify({
+      id: id + 1,
+      first: candidateList.find((v) => v.id === id + 1)?.first,
+    });
+    history.push(`/score?${params}`);
+  };
 
   const handleScore = async (e: { score: string; comment: string }) => {
     setScoreLoading(true);
@@ -81,11 +102,9 @@ const Score = (props: any) => {
       });
       if (res.success) {
         message.success('打分完成');
-        // 打分完成后跳转到下一位面试者,若没有下一位面试者，则返回
+        // 打分完成后跳转到下一位面试者
         form.resetFields();
-        if (id < candidateList[candidateList.length - 1].id) {
-          history.push(`/score?id=${id + 1}`);
-        } else history.push('/');
+        goToNext();
       } else {
         message.error(`打分失败,${res.errorMsg}`);
       }
@@ -108,11 +127,9 @@ const Score = (props: any) => {
       });
       if (res.success) {
         message.success('审核完成');
-        // 审核完成后跳转到下一位面试者，若没有下一位面试者，则返回
+        // 审核完成后跳转到下一位面试者
         form.resetFields();
-        if (id < candidateList[candidateList.length - 1].id) {
-          history.push(`/score?id=${id + 1}`);
-        } else history.push('/');
+        goToNext();
       } else {
         message.error(`审核失败,${res.errorMsg}`);
       }
@@ -133,7 +150,9 @@ const Score = (props: any) => {
             <Descriptions.Item label='学院'>{data?.college}</Descriptions.Item>
             <Descriptions.Item label='电话号'>{data?.phone}</Descriptions.Item>
             <Descriptions.Item label='QQ号'>{data?.qq}</Descriptions.Item>
-            <Descriptions.Item label={`第${first === '1' ? '一' : '二'}志愿`}>
+            <Descriptions.Item
+              label={`第${first === '1' ? '一' : '二'}志愿`}
+              span={2}>
               {data?.depart}
             </Descriptions.Item>
             <Descriptions.Item label='个人简介'>
@@ -153,7 +172,8 @@ const Score = (props: any) => {
                     Q{value.question_id}：{value.question_name}
                   </h3>
                   <p>
-                    {value.question_type === 'multiple' &&
+                    {(value.question_type === 'multiple' ||
+                      value.question_type === 'single') &&
                       value.question_option.map((v, i) => `${v.option}；`)}
                   </p>
                   <p>
@@ -167,7 +187,7 @@ const Score = (props: any) => {
       </div>
       <div className={Style.scoreForm}>
         <Spin spinning={loading}>
-          <Form form={form} onFinish={handleScore} labelCol={{ span: 3 }}>
+          <Form form={form} onFinish={handleScore} labelCol={{ span: 6 }}>
             <Form.Item
               label='面试打分'
               name='score'

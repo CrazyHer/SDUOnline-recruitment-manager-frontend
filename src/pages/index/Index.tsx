@@ -2,6 +2,7 @@
 import { Button, message, Table } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
 import { inject, observer } from 'mobx-react';
+import { stringify } from 'querystring';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import XLSX from 'xlsx';
@@ -16,7 +17,7 @@ const Index = (props: any) => {
   const state = props.state as State;
   // 表格列名定义
   const columns: ColumnsType<{}> = [
-    { title: '序号', dataIndex: 'id', key: 'id', align: 'center' },
+    { title: '排号', dataIndex: 'id', key: 'id', align: 'center' },
     { title: '姓名', dataIndex: 'name', key: 'name', align: 'center' },
     { title: '学院', dataIndex: 'college', key: 'college', align: 'center' },
     { title: '电话号', dataIndex: 'phone', key: 'phone', align: 'center' },
@@ -63,7 +64,8 @@ const Index = (props: any) => {
         <Button
           type='link'
           onClick={() => {
-            history.push(`/score?id=${e.id}`);
+            const params = stringify({ id: e.id, first: e.first });
+            history.push(`/score?${params}`);
           }}>
           详细信息
         </Button>

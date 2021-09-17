@@ -13,7 +13,7 @@ export default class State {
     score: string;
     status: number;
     first: string;
-    key: number;
+    key: string;
   }[];
   constructor() {
     this.depart = '';
@@ -28,6 +28,6 @@ export default class State {
   ) {
     this.candidateList = candidateList
       .sort((a, b) => a.id - b.id)
-      .map((v) => ({ ...v, key: v.id }));
+      .map((v) => ({ ...v, key: v.username }));
   }
 }
