@@ -16,8 +16,14 @@ const Index = (props: any) => {
   const history = useHistory();
   const state = props.state as State;
   // 表格列名定义
-  const columns: ColumnsType<{}> = [
-    { title: '排号', dataIndex: 'id', key: 'id', align: 'center' },
+  const columns: ColumnsType<typeof state.candidateList[0]> = [
+    {
+      title: '排号',
+      dataIndex: 'id',
+      key: 'id',
+      align: 'center',
+      sorter: (a, b) => a.id - b.id,
+    },
     { title: '姓名', dataIndex: 'name', key: 'name', align: 'center' },
     { title: '学院', dataIndex: 'college', key: 'college', align: 'center' },
     { title: '电话号', dataIndex: 'phone', key: 'phone', align: 'center' },
@@ -64,7 +70,11 @@ const Index = (props: any) => {
         <Button
           type='link'
           onClick={() => {
-            const params = stringify({ id: e.id, first: e.first });
+            const params = stringify({
+              id: e.id,
+              first: e.first,
+              username: e.username,
+            });
             history.push(`/score?${params}`);
           }}>
           详细信息
@@ -110,8 +120,9 @@ const Index = (props: any) => {
       await new Promise<void>((resolve, reject) => {
         let wsData = [];
         wsData.push([
-          '序号',
+          '排号',
           '姓名',
+          '学号',
           '学院',
           '电话号',
           'QQ号',
@@ -123,6 +134,7 @@ const Index = (props: any) => {
           wsData.push([
             row.id,
             row.name,
+            row.username,
             row.college,
             row.phone,
             row.qq,
@@ -160,7 +172,7 @@ const Index = (props: any) => {
           导出全部人员信息
         </Button>
       </div>
-      <Table
+      <Table<typeof state.candidateList[0]>
         bordered
         loading={listLoading || user.loginLoading}
         columns={columns}

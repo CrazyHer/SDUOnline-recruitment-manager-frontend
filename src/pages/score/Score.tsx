@@ -12,6 +12,7 @@ import Style from './Score.module.css';
 const Score = (props: any) => {
   const id = Number(new URLSearchParams(useLocation().search).get('id'));
   const first = new URLSearchParams(useLocation().search).get('first');
+  const username = new URLSearchParams(useLocation().search).get('username');
   const user = props.user as User;
   const { depart, candidateList } = props.state as State;
   const [data, setData] = useState<
@@ -27,6 +28,7 @@ const Score = (props: any) => {
       !user.token ||
       !id ||
       !depart ||
+      !username ||
       (first !== '0' && first !== '1') ||
       !candidateList[0]
     ) {
@@ -47,7 +49,6 @@ const Score = (props: any) => {
       history.replace(`/score?id=${id + 1}`);
       return;
     }
-
     // 同步跳转输入框里的id值
     setIdInput(id);
     // 获取面试者信息
@@ -56,6 +57,7 @@ const Score = (props: any) => {
       id,
       depart,
       first,
+      username,
     })
       .then((res) => {
         if (res.success) {
@@ -86,6 +88,7 @@ const Score = (props: any) => {
     const params = stringify({
       id: id + 1,
       first: candidateList.find((v) => v.id === id + 1)?.first,
+      username: candidateList.find((v) => v.id === id + 1)?.username,
     });
     history.push(`/score?${params}`);
   };
@@ -93,12 +96,16 @@ const Score = (props: any) => {
   const handleScore = async (e: { score: string; comment: string }) => {
     setScoreLoading(true);
     try {
+      if (!username) {
+        throw new Error('username不能为空');
+      }
       const res = await fetch['POST/manager/interview/score']({
         id,
         depart,
         score: e.score,
         comment: e.comment,
         first: first as string,
+        username,
       });
       if (res.success) {
         message.success('打分完成');
@@ -119,11 +126,15 @@ const Score = (props: any) => {
   const handlePass = async (isPass: boolean) => {
     setScoreLoading(true);
     try {
+      if (!username) {
+        throw new Error('username不能为空');
+      }
       const res = await fetch['POST/manager/interview/pass']({
         id,
         depart,
         pass: isPass ? '1' : '0',
         first: first as string,
+        username,
       });
       if (res.success) {
         message.success('审核完成');
@@ -147,12 +158,11 @@ const Score = (props: any) => {
         <Spin spinning={loading}>
           <Descriptions bordered column={2}>
             <Descriptions.Item label='姓名'>{data?.name}</Descriptions.Item>
+            <Descriptions.Item label='学号'>{data?.username}</Descriptions.Item>
             <Descriptions.Item label='学院'>{data?.college}</Descriptions.Item>
             <Descriptions.Item label='电话号'>{data?.phone}</Descriptions.Item>
             <Descriptions.Item label='QQ号'>{data?.qq}</Descriptions.Item>
-            <Descriptions.Item
-              label={`第${first === '1' ? '一' : '二'}志愿`}
-              span={2}>
+            <Descriptions.Item label={`第${first === '1' ? '一' : '二'}志愿`}>
               {data?.depart}
             </Descriptions.Item>
             <Descriptions.Item label='个人简介'>
@@ -254,7 +264,12 @@ const Score = (props: any) => {
           onClick={() => {
             // 跳转时，评分和备注表单需要初始化
             form.resetFields();
-            history.push(`/score?id=${idInput}`);
+            const params = stringify({
+              id: idInput,
+              first: candidateList.find((v) => v.id === idInput)?.first,
+              username: candidateList.find((v) => v.id === idInput)?.username,
+            });
+            history.push(`/score?${params}`);
           }}
           disabled={
             idInput === id ||

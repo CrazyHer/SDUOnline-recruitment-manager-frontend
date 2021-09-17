@@ -1,4 +1,4 @@
-/* md5: d8647471bf132ba4fb6f383a55460d48 */
+/* md5: 5e6ef962ff37efa064bb596a93f93199 */
 /* Rap仓库id: 286854 */
 /* Rapper版本: 1.2.2 */
 /* eslint-disable */
@@ -127,6 +127,7 @@ export interface IModels {
       score: string
       comment: string
       first: string
+      username: string
     }
     Res: {
       success: boolean
@@ -225,6 +226,7 @@ export interface IModels {
       id: number
       depart: string
       first: string
+      username: string
     }
     Res: {
       success: boolean
@@ -273,6 +275,7 @@ export interface IModels {
       depart: string
       pass: string
       first: string
+      username: string
     }
     Res: {
       success: boolean
