@@ -85,12 +85,15 @@ const Score = (props: any) => {
   const [scoreLoading, setScoreLoading] = useState(false);
 
   const goToNext = () => {
+    /*
     const params = stringify({
       id: id + 1,
       first: candidateList.find((v) => v.id === id + 1)?.first,
       username: candidateList.find((v) => v.id === id + 1)?.username,
     });
     history.push(`/score?${params}`);
+    */
+    history.push('/');
   };
 
   const handleScore = async (e: { score: string; comment: string }) => {
@@ -208,7 +211,8 @@ const Score = (props: any) => {
             <Form.Item label='备注' name='comment' wrapperCol={{ span: 16 }}>
               <Input.TextArea autoSize={{ minRows: 8 }} />
             </Form.Item>
-            {candidateList.find((v) => v.id === id)?.status === 1 ? (
+            {candidateList.find((v) => v.username === username)?.status ===
+            1 ? (
               <Form.Item wrapperCol={{ offset: 0 }}>
                 <div className={Style.btnGroup}>
                   <Button onClick={() => history.push('/')}>返回</Button>
@@ -220,7 +224,8 @@ const Score = (props: any) => {
                   </Button>
                 </div>
               </Form.Item>
-            ) : candidateList.find((v) => v.id === id)?.status === 2 ? (
+            ) : candidateList.find((v) => v.username === username)?.status ===
+              2 ? (
               <Form.Item wrapperCol={{ offset: 0 }}>
                 <div className={Style.btnGroup}>
                   <Button onClick={() => history.push('/')}>返回</Button>
@@ -259,24 +264,26 @@ const Score = (props: any) => {
         />
         <p>/</p>
         <p>{candidateList[candidateList.length - 1]?.id}</p>
-        <Button
-          type='link'
-          onClick={() => {
-            // 跳转时，评分和备注表单需要初始化
-            form.resetFields();
-            const params = stringify({
-              id: idInput,
-              first: candidateList.find((v) => v.id === idInput)?.first,
-              username: candidateList.find((v) => v.id === idInput)?.username,
-            });
-            history.push(`/score?${params}`);
-          }}
-          disabled={
-            idInput === id ||
-            idInput > candidateList[candidateList.length - 1]?.id
-          }>
-          转到
-        </Button>
+        {
+          <Button
+            type='link'
+            onClick={() => {
+              // 跳转时，评分和备注表单需要初始化
+              form.resetFields();
+              const params = stringify({
+                id: idInput,
+                first: candidateList.find((v) => v.id === idInput)?.first,
+                username: candidateList.find((v) => v.id === idInput)?.username,
+              });
+              history.push(`/score?${params}`);
+            }}
+            disabled={
+              idInput === id ||
+              idInput > candidateList[candidateList.length - 1]?.id
+            }>
+            转到
+          </Button>
+        }
       </div>
     </div>
   );
